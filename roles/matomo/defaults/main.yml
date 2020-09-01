@@ -1,0 +1,7 @@
+---
+matomo_db_name: "matomo"
+matomo_db_user: "matomo"
+matomo_db_password: "supersecretpassword"
+matomo_docker_ports: []
+matomo_docker_labels: []
+

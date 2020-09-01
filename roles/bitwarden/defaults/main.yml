@@ -1,0 +1,10 @@
+---
+bitwarden_version: "1.15.1"
+bitwarden_home: "/opt/bitwarden/data"
+bitwarden_container_image: "docker.io/bitwardenrs/server:{{ bitwarden_version }}-alpine"
+
+bitwarden_admin_token:
+bitwarden_yubico_client_id:
+bitwarden_yubico_secret_key:
+bitwarden_smtp_pass:
+bitwarden_domain:

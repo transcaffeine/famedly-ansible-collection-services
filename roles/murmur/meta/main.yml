@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Vincent Wilke
+  description: Deploy a basic murmur-server in a container.
+  company: Famedly GmbH
+
+  license: AGPL-3.0-or-later
+
+  min_ansible_version: 2.5
+
+  platforms:
+  - name: Debian
+    versions:
+    - 9
+    - 10
+
+  galaxy_tags: []
+
+dependencies: []
+

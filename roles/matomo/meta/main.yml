@@ -1,0 +1,16 @@
+galaxy_info:
+  author: Jan Christian Grünhage <jan.christian@gruenhage.xyz>
+  description: Deploy Matomo (incl redis and mariadb) using docker
+
+  license: AGPLv3
+
+  min_ansible_version: 2.5
+
+  platforms:
+  - name: Debian
+    versions:
+    - all
+
+  galaxy_tags: []
+
+dependencies: []
