@@ -1,1 +1,10 @@
 ---
+redis_docker_labels_complete: "{{ redis_docker_labels_base | combine(redis_docker_labels) }}"
+redis_docker_labels_base:
+  version: "{{ redis_version }}"
+mariadb_docker_labels_complete: "{{ mariadb_docker_labels_base | combine(mariadb_docker_labels) }}"
+mariadb_docker_labels_base:
+  version: "{{ mariadb_version }}"
+matomo_docker_labels_complete: "{{ matomo_docker_labels_base | combine(matomo_docker_labels) }}"
+matomo_docker_labels_base:
+  version: "{{ matomo_version }}"

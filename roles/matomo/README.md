@@ -12,6 +12,11 @@ Role Variables
 --------------
 
 Look into the defaults file.
+matomo_db_password: ""
+redis_version: "5.0.5"
+mariadb_version: "10.4.6"
+matomo_version: "3.13.5"
+matomo_http_host: "example.com"
 
 License
 -------

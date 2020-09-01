@@ -3,8 +3,9 @@
   become: yes
   docker_container:
     name: redis
-    image: docker.io/redis:5.0.5-alpine
+    image: "{{ redis_docker_image }}"
     command: "redis-server --appendonly yes"
+    labels: "{{ redis_docker_labels_complete }}"
     volumes:
       - /opt/redis/data:/data
     restart_policy: unless-stopped
@@ -13,9 +14,10 @@
   become: yes
   docker_container:
     name: mariadb
-    image: docker.io/mariadb:10.4.6
+    image: "{{ mariadb_docker_image }}"
     volumes:
       - /opt/mariadb/database:/var/lib/mysql
+    labels: "{{ mariadb_docker_labels_complete }}"
     env:
       MYSQL_ROOT_PASSWORD: "{{ matomo_db_password }}"
       MYSQL_DATABASE: "{{ matomo_db_name }}"
@@ -27,7 +29,7 @@
   become: yes
   docker_container:
     name: matomo
-    image: docker.io/matomo:3.13.5-apache
+    image: "{{ matomo_docker_image }}"
     pull: true
     links:
       - mariadb:mariadb
@@ -35,6 +37,6 @@
     volumes:
       - /opt/matomo/config:/var/www/html/config
       - /opt/matomo/logs:/var/www/html/logs
-    labels: "{{ matomo_docker_labels }}"
+    labels: "{{ matomo_docker_labels_complete }}"
     ports: "{{ matomo_docker_ports }}"
     restart_policy: unless-stopped
