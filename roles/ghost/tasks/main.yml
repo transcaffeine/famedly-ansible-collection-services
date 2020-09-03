@@ -1,0 +1,27 @@
+---
+- name: "{{ blog_task_prefix }} Create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ blog_path_base }}"
+    - "{{ blog_path_data }}"
+
+- name: "{{ blog_task_prefix }} Install .env file"
+  template:
+    src: "{{ blog_template_env }}"
+    dest: "{{ blog_path_env }}"
+
+- name: "{{ blog_task_prefix }} Provision container"
+  docker_container:
+    env_file: "{{ blog_path_env }}"
+    image: "{{ blog_container_image }}"
+    name: "{{ blog_container_name }}"
+    ports: "{{ blog_container_ports }}"
+    labels: "{{ blog_container_labels_complete }}"
+    pull: "{{ blog_container_pull }}"
+    recreate: "{{ blog_container_recreate }}"
+    restart_policy: "{{ blog_container_restart_policy }}"
+    state: "{{ blog_container_state }}"
+    volumes:
+      - "{{ blog_path_data }}:{{ blog_container_data }}"
