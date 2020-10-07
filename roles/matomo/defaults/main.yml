@@ -5,7 +5,7 @@ redis_docker_labels: {} #override
 mariadb_version: "10.4.6"
 mariadb_docker_image: "docker.io/mariadb:{{ mariadb_version }}"
 mariadb_docker_labels: {} #override
-matomo_version: "3.13.6"
+matomo_version: "3.14.1"
 matomo_db_name: "matomo"
 matomo_db_user: "matomo"
 matomo_docker_image: "docker.io/matomo:{{ matomo_version }}-apache"
