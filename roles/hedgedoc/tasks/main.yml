@@ -1,0 +1,43 @@
+---
+# tasks file for hedgedoc
+- name: Ensure user is created
+  user:
+    name: "{{ hedgedoc_user }}"
+    state: present
+    system: yes
+  register: hedgedoc_user_res
+
+- name: Ensure directories are created
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ hedgedoc_user_res.uid }}"
+    group: "{{ hedgedoc_user_res.group }}"
+  loop:
+    - "{{ hedgedoc_base_path }}"
+    - "{{ hedgedoc_uploads_path }}"
+    - "{{ hedgedoc_config_dir_path }}"
+
+- name: Ensure configuration is templated
+  copy:
+    content: "{{ hedgedoc_config_merged | to_nice_json }}"
+    dest: "{{ hedgedoc_config_path }}"
+    mode: 0600
+    owner: "{{ hedgedoc_user_res.uid }}"
+    group: "{{ hedgedoc_user_res.group }}"
+  notify: "restart-hedgedoc"
+
+- name: Ensure container is started
+  docker_container:
+    image: "{{ hedgedoc_container_image_ref }}"
+    name: "{{ hedgedoc_container_name }}"
+    state: started
+    pull: yes
+    restart_policy: unless-stopped
+    user: "{{ hedgedoc_user_res.uid }}:{{ hedgedoc_user_res.group }}"
+    volumes: "{{ hedgedoc_container_volumes_merged }}"
+    ports: "{{ hedgedoc_container_ports }}"
+    env: "{{ hedgedoc_container_env }}"
+    labels: "{{ hedgedoc_container_labels_merged }}"
+    entrypoint: []

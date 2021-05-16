@@ -1,0 +1,30 @@
+---
+# vars file for hedgedoc
+hedgedoc_container_labels_merged: "{{ hedgedoc_container_labels_base | combine(hedgedoc_container_labels) }}"
+hedgedoc_container_labels_base:
+  version: "{{ hedgedoc_container_image_tag | default(hedgedoc_version, true) }}"
+
+hedgedoc_container_volumes_merged: "{{ hedgedoc_container_volumes_base + hedgedoc_container_volumes }}"
+hedgedoc_container_volumes_base:
+  - "{{ hedgedoc_uploads_path }}:/hedgedoc/public/uploads"
+  - "{{ hedgedoc_config_path }}:/hedgedoc/config.json"
+
+hedgedoc_config_merged:
+  production: "{{ hedgedoc_config_base | combine(hedgedoc_config) }}"
+hedgedoc_config_base:
+  sessionSecret: '{{ hedgedoc_session_secret }}'
+  protocolUseSSL: true
+  domain: '{{ hedgedoc_domain }}'
+  loglevel: '{{ hedgedoc_log_level }}'
+  hsts:
+    enable: false
+  csp:
+    enable: false
+  cookiePolicy: 'lax'
+  db:
+    username: '{{ hedgedoc_db_username }}'
+    password: '{{ hedgedoc_db_password }}'
+    database: '{{ hedgedoc_db_database }}'
+    host: '{{ hedgedoc_db_host }}'
+    port: '{{ hedgedoc_db_port | int }}'
+    dialect: '{{ hedgedoc_db_dialect }}'

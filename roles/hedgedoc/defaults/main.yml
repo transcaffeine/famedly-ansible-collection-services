@@ -1,0 +1,29 @@
+---
+# defaults file for hedgedoc
+hedgedoc_log_level: "info"
+
+hedgedoc_db_username: "hedgedoc"
+hedgedoc_db_database: "hedgedoc"
+hedgedoc_db_port: 5432
+hedgedoc_db_dialect: postgres
+
+hedgedoc_version: 1.8.2
+
+hedgedoc_user: "hedgedoc"
+
+hedgedoc_base_path: "/opt/hedgedoc"
+hedgedoc_uploads_path: "{{ hedgedoc_base_path }}/uploads"
+hedgedoc_config_dir_path: "{{ hedgedoc_base_path }}/config"
+hedgedoc_config_path: "{{ hedgedoc_config_dir_path }}/config.json"
+
+hedgedoc_config: {}
+
+hedgedoc_container_name: "hedgedoc"
+hedgedoc_container_image: "quay.io/hedgedoc/hedgedoc"
+hedgedoc_container_image_tag: ~
+hedgedoc_container_image_ref: "{{ hedgedoc_container_image }}:{{ hedgedoc_container_image_tag | default(hedgedoc_version + '-alpine', true) }}"
+hedgedoc_container_env: {}
+hedgedoc_container_labels: {}
+hedgedoc_container_ports:
+  - 3000:3000
+hedgedoc_container_volumes: []
