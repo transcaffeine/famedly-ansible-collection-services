@@ -1,0 +1,42 @@
+---
+
+snipe_it_container_labels_merged: "{{ snipe_it_container_labels_base | combine(snipe_it_container_labels) }}"
+snipe_it_container_labels_base:
+  version: "{{ snipe_it_container_image_tag | default(snipe_it_version, true) }}"
+
+snipe_it_container_volumes_merged: "{{ snipe_it_container_volumes_base + snipe_it_container_volumes }}"
+snipe_it_container_volumes_base:
+  - "{{ snipe_it_data_path }}:/var/lib/snipeit/data:z"
+  - "{{ snipe_it_keys_path }}:/var/lib/snipeit/keys:z"
+  - "{{ snipe_it_dumps_path }}:/var/lib/snipeit/dumps:z"
+  - "{{ snipe_it_config_file }}:/var/www/html/.env:z"
+
+snipe_it_config_merged: "{{ snipe_it_config_base | combine(snipe_it_optional_config_yaml | from_yaml) | combine(snipe_it_config) }}"
+snipe_it_optional_config_yaml: |
+  {% if snipe_it_config_db_port %}
+  DB_PORT: "{{ snipe_it_config_db_port }}"
+  {% endif %}
+  {% if snipe_it_config_db_socket %}
+  DB_SOCKET: "{{ snipe_it_config_db_socket }}"
+  {% endif %}
+  {% if snipe_it_config_db_prefix %}
+  DB_PREFIX: "{{ snipe_it_config_db_prefix }}"
+  {% endif %}
+  {% if snipe_it_config_db_host %}
+  DB_HOST: "{{ snipe_it_config_db_host }}"
+  {% endif %}
+snipe_it_config_base:
+  APP_ENV: production
+  APP_DEBUG: "false"
+  APP_USER: "{{ snipe_it_config_app_user }}"
+  APP_KEY: "{{ snipe_it_config_app_key }}"
+  APP_URL: "{{ snipe_it_config_app_url }}"
+  APP_TIMEZONE: "{{ snipe_it_config_app_timezone }}"
+  APP_LOCALE: "{{ snipe_it_config_app_locale }}"
+  APP_TRUSTED_PROXIES: "{{ snipe_it_config_app_trusted_proxies }}"
+  DB_CONNECTION: "{{ snipe_it_config_db_connection }}"
+  DB_DATABASE: "{{ snipe_it_config_db_database }}"
+  DB_USERNAME: "{{ snipe_it_config_db_username }}"
+  DB_PASSWORD: "{{ snipe_it_config_db_password }}"
+  DB_DUMP_PATH: "{{ snipe_it_config_db_dump_path }}"
+  IMAGE_LIB: gd
