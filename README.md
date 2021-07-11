@@ -14,6 +14,7 @@ with no direct relation to any customers.
 - [`ghost`](roles/ghost/README.md): a role for deploying the blogging platform [ghost](https://ghost.org/blog/).
 - [`hedgedoc`](roles/hedgedoc/README.md): deploys [hedgedoc](https://hedgedoc.org/) (formerly known as `CodiMD`),
   a polished and modern alternative to etherpad & co.
+- [`ktra`](roles/ktra/README.md): a role for [ktra](https://book.ktra.dev/), a little self hostable cargo crate registry
 - [`matomo`](roles/matomo/README.md): role for [matomo](https://matomo.org/) (formerly known as piwik), a web analytics tool
 - [`murmur`](roles/murmur/README.md): deploys [murmur](https://www.mumble.info/downloads/), the mumble server software.
 - [`snipe-it`](roles/snipe-it/README.md): used for deploying [SnipeIt](https://snipeitapp.com/), an open-source asset management.

@@ -1,0 +1,18 @@
+---
+# defaults file for ktra
+ktra_version: 0.5.1
+
+ktra_user: "ktra"
+
+ktra_base_path: "/opt/ktra"
+
+ktra_container_name: "ktra"
+ktra_container_image: "ghcr.io/moriturus/ktra"
+ktra_container_image_tag: ~
+ktra_container_image_ref: "{{ ktra_container_image }}:{{ ktra_container_image_tag | default(ktra_version, true) }}"
+ktra_container_env: {}
+ktra_container_labels: {}
+ktra_container_ports:
+  - 8000:8000
+ktra_container_volumes: []
+

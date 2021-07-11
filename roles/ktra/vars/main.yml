@@ -1,0 +1,9 @@
+---
+# vars file for ktra
+ktra_container_labels_merged: "{{ ktra_container_labels_base | combine(ktra_container_labels) }}"
+ktra_container_labels_base:
+  version: "{{ ktra_container_image_tag | default(ktra_version, true) }}"
+
+ktra_container_volumes_merged: "{{ ktra_container_volumes_base + ktra_container_volumes }}"
+ktra_container_volumes_base:
+  - "{{ ktra_base_path }}:{{ ktra_base_path }}"

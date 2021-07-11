@@ -1,0 +1,8 @@
+---
+# handlers file for ktra
+- name: Restart ktra
+  docker_container:
+    name: "{{ ktra_container_name }}"
+    state: "started"
+    restart: yes
+  listen: "restart-ktra"
