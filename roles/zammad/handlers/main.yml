@@ -1,0 +1,25 @@
+- name: Restart elasticsearch
+  docker_container:
+    name: "zammad-elasticsearch"
+    state: started
+    restart: yes
+
+- name: Restart postgresql
+  docker_container:
+    name: "zammad-postgresql"
+    state: started
+    restart: yes
+
+- name: Restart zammad-stack
+  docker_container:
+    name: "{{ container.name }}"
+    state: started
+    restart: yes
+  loop: "{{ zammad_containers }}"
+  loop_control:
+    loop_var: container
+
+- name: Initilize zammad
+  docker_container:
+    name: "zammad-init"
+    state: started

@@ -1,0 +1,154 @@
+---
+zammad_user: zammad
+zammad_base_path: /opt/zammad
+zammad_command_dir: /usr/bin/
+
+zammad_enable_command: yes
+
+zammad_config_port: 8080
+
+zammad_postgres_user: "{{ zammad_user }}"
+zammad_postgres_passwd: ~
+
+zammad_container_repo: zammad/zammad-docker-compose
+zammad_container_version: 4.1.0-72
+zammad_memcached_version: 1.6.10-alpine
+
+zammad_network:
+  name: zammad
+
+zammad_host_network: ~
+zammad_allow_host_nework: ~
+
+# The container order is *very* important!
+zammad_containers:
+  - name: "zammad-postgresql"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-postgresql-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.postgresql | default({}) }}"
+    env:
+      POSTGRES_USER: "{{ zammad_postgres_user }}"
+      POSTGRES_PASSWORD: "{{ zammad_postgres_passwd }}"
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ zammad_base_path }}/postgresql-data:/var/lib/postgresql/data:rw"
+      - "{{ zammad_base_path }}/postgresql-run:/var/run/postgresql:rw"
+      - "{{ zammad_postgres_passwd_path }}:/etc/passwd:ro"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.postgresql | default(False) }}"
+
+  - name: "zammad-memcached"
+    image_name: "memcached"
+    image_tag: "{{ zammad_memcached_version }}"
+    labels: "{{ zammad_labels.memcached | default({}) }}"
+    restart_policy: "unless-stopped"
+    command: "memcached -m 256M"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.memcached | default(False) }}"
+
+  - name: "zammad-elasticsearch"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-elasticsearch-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.elasticsearch | default({}) }}"
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ zammad_base_path }}/elasticsearch-data:/usr/share/elasticsearch/data:rw"
+      - "{{ zammad_base_path }}/elasticsearch-config:/usr/share/elasticsearch/config:rw"
+      - "{{ zammad_base_path }}/elasticsearch-logs:/usr/share/elasticsearch/logs:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.elasticsearch | default(False) }}"
+
+  - name: "zammad-websocket"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.websocket | default({}) }}"
+    restart_policy: "unless-stopped"
+    command: "zammad-websocket"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.websocket | default(False) }}"
+
+  - name: "zammad-railsserver"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.railsserver | default({}) }}"
+    restart_policy: "unless-stopped"
+    command: "zammad-railsserver"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.railsserver | default(False) }}"
+
+  - name: "zammad-scheduler"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.scheduler | default({}) }}"
+    restart_policy: "unless-stopped"
+    command: "zammad-scheduler"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.scheduler | default(False) }}"
+
+  - name: "zammad-backup"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-postgresql-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.backup | default({}) }}"
+    env:
+      BACKUP_SLEEP: "86400"
+      HOLD_DAYS: "10"
+      POSTGRESQL_USER: "{{ zammad_postgres_user }}"
+      POSTGRESQL_PASS: "{{ zammad_postgres_passwd }}"
+      POSTGRESQL_DB: "{{ zammad_postgres_user }}"
+    restart_policy: "unless-stopped"
+    entrypoint: /usr/local/bin/backup.sh
+    command: "zammad-backup"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-backup:/var/tmp/zammad:rw"
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.backup | default(False) }}"
+
+  - name: "zammad-init"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-{{ zammad_container_version }}"
+    labels: "{{ zammad_labels.init | default({}) }}"
+    env:
+      POSTGRESQL_USER: "{{ zammad_postgres_user }}"
+      POSTGRESQL_PASS: "{{ zammad_postgres_passwd }}"
+      POSTGRESQL_DB: "{{ zammad_postgres_user }}"
+    restart_policy: "on-failure"
+    command: "zammad-init"
+    state: "present"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.init | default(False) }}"
+
+  - name: "zammad-nginx"
+    image_name: "{{ zammad_container_repo }}"
+    image_tag: "zammad-{{ zammad_container_version }}"
+    ports: "{{ zammad_config_port }}"
+    labels: "{{ zammad_labels.nginx | default({}) }}"
+    restart_policy: "unless-stopped"
+    command: "zammad-nginx"
+    volumes:
+      - "{{ zammad_base_path }}/zammad-data:/opt/zammad:rw"
+      - "{{ zammad_base_path }}/zammad-tmp:/tmp:rw"
+      - "{{ zammad_base_path }}/nginx-config:/etc/nginx/sites-enabled/:rw"
+      - "{{ zammad_base_path }}/nginx-logs:/var/log/nginx/:rw"
+      - "{{ zammad_base_path }}/nginx-tmp:/var/lib/nginx:rw"
+    networks:
+      - name: "{{ zammad_network.name }}"
+    add_host_network: "{{ zammad_allow_host_nework.nginx | default(False) }}"
