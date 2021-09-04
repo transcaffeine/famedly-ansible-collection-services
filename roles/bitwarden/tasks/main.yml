@@ -10,16 +10,7 @@
     image: "{{ bitwarden_container_image }}"
     name: bitwarden
     labels: "{{ bitwarden_docker_labels_complete }}"
-    env:
-      DOMAIN: "https://{{ bitwarden_domain }}"
-      SIGNUPS_ALLOWED: "false"
-      ADMIN_TOKEN: "{{ bitwarden_admin_token }}"
-      YUBICO_CLIENT_ID: "{{ bitwarden_yubico_client_id }}"
-      YUBICO_SECRET_KEY: "{{ bitwarden_yubico_secret_key }}"
-      SMTP_HOST: "172.17.0.1"
-      SMTP_FROM: "pass@famedly.com"
-      SMTP_PORT: "2525"
-      SMTP_SSL: "false"
+    env: "{{ bitwarden_env_vars }}"
     volumes:
       - "{{ bitwarden_home }}:/data"
     restart_policy: unless-stopped
