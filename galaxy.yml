@@ -1,0 +1,16 @@
+namespace: famedly
+name: services
+version: 0.1.0
+readme: README.md
+authors:
+- Jadyn Emma Jäger <jadyn@jadyn.dev>
+- Jan Christian Grünhage <jan.christian@gruenhage.xyz>
+- Johanna Dorothea Reichmann <transcaffeine@finallycoffee.eu>
+- Vincent Wilke <v.wilke@famedly.com>
+description: Various services, dockerized, used at famedly
+license:
+- AGPL-3.0-only
+build_ignore:
+- '*.tar.gz'
+repository: https://gitlab.com/famedly/company/devops/collections/services
+issues: https://gitlab.com/famedly/company/devops/collections/services/-/issues
