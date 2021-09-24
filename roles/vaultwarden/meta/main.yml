@@ -1,6 +1,6 @@
 galaxy_info:
-  author: Vincent Wilke
-  description: role to install bitwarden with docker
+  author: Vincent Wilke & Jadyn Emma Jäger
+  description: role to install vaultwarden with docker
   company: Famedly GmbH
 
   # If the issue tracker for your role is not on github, uncomment the

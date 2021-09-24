@@ -1,0 +1,17 @@
+---
+- name: create vaultwarden directory
+  file:
+    state: directory
+    path: "{{ vaultwarden_home }}"
+  become: yes
+
+- name: deploy vaultwarden
+  docker_container:
+    image: "{{ vaultwarden_container_image }}"
+    name: vaultwarden
+    labels: "{{ vaultwarden_docker_labels_complete }}"
+    env: "{{ vaultwarden_env_vars }}"
+    volumes:
+      - "{{ vaultwarden_home }}:/data"
+    restart_policy: unless-stopped
+  become: yes

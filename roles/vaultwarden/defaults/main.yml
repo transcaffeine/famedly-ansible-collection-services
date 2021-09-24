@@ -1,0 +1,26 @@
+---
+vaultwarden_version: "1.22.1"
+vaultwarden_home: "/opt/vaultwarden/data"
+vaultwarden_container_image: "docker.io/vaultwarden/server:{{ vaultwarden_version }}-alpine"
+
+vaultwarden_admin_token: ~
+vaultwarden_yubico_client_id: ~
+vaultwarden_yubico_secret_key: ~
+vaultwarden_smtp_pass: ~
+vaultwarden_domain: ~
+
+vaultwarden_smtp_host: ~
+vaultwarden_smtp_from: ~
+vaultwarden_smtp_port: ~
+vaultwarden_smtp_ssl: ~
+
+vaultwarden_env_vars:
+  DOMAIN: "https://{{ vaultwarden_domain }}"
+  SIGNUPS_ALLOWED: "false"
+  ADMIN_TOKEN: "{{ vaultwarden_admin_token }}"
+  YUBICO_CLIENT_ID: "{{ vaultwarden_yubico_client_id }}"
+  YUBICO_SECRET_KEY: "{{ vaultwarden_yubico_secret_key }}"
+  SMTP_HOST: "{{ vaultwarden_smtp_host }}"
+  SMTP_FROM: "{{ vaultwarden_smtp_from }}"
+  SMTP_PORT: "{{ vaultwarden_smtp_port }}"
+  SMTP_SSL: "{{ vaultwarden_smtp_ssl }}"

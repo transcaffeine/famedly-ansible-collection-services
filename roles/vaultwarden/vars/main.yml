@@ -1,0 +1,4 @@
+---
+vaultwarden_docker_labels_complete: "{{ vaultwarden_docker_labels_base | combine(vaultwarden_docker_labels) }}"
+vaultwarden_docker_labels_base:
+  version: "{{ vaultwarden_version }}"

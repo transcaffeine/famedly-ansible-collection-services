@@ -1,4 +1,0 @@
----
-bitwarden_docker_labels_complete: "{{ bitwarden_docker_labels_base | combine(bitwarden_docker_labels) }}"
-bitwarden_docker_labels_base:
-  version: "{{ bitwarden_version }}"

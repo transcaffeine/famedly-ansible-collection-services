@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Installs an bitwarden docker image
+Installs an vaultwarden docker image
 
 Requirements
 ------------
@@ -12,12 +12,12 @@ Role Variables
 --------------
 
 Look in the defaults directory
-bitwarden_docker_labels: {}
+vaultwarden_docker_labels: {}
 
 Dependencies
 ------------
 
-depends on bitwarden docker image
+depends on vaultwarden docker image
 
 Example Playbook
 ----------------
