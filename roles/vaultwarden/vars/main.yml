@@ -1,4 +1,11 @@
 ---
-vaultwarden_docker_labels_complete: "{{ vaultwarden_docker_labels_base | combine(vaultwarden_docker_labels) }}"
-vaultwarden_docker_labels_base:
+vaultwarden_container_labels_merged: "{{ vaultwarden_container_labels_base | combine(vaultwarden_container_labels, recursive=True) }}"
+vaultwarden_container_labels_base:
   version: "{{ vaultwarden_version }}"
+
+vaultwarden_container_volumes_merged: "{{ vaultwarden_container_volumes_base + vaultwarden_container_volumes | default ([]) }}"
+vaultwarden_container_volumes_base:
+  - "{{ vaultwarden_config_dir }}:/data:rw"
+
+vaultwarden_config_merged: "{{ vaultwarden_default_config | combine(vaultwarden_config | default([]), recursive=True) }}"
+vaultwarden_container_env_merged: "{{ vaultwarden_container_default_env | combine(vaultwarden_container_env | default([]), recursive=True) }}"

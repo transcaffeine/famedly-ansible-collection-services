@@ -1,26 +1,58 @@
 ---
 vaultwarden_version: "1.22.1"
-vaultwarden_home: "/opt/vaultwarden/data"
-vaultwarden_container_image: "docker.io/vaultwarden/server:{{ vaultwarden_version }}-alpine"
+vaultwarden_config_dir: "/opt/vaultwarden/data"
+vaultwarden_config_file: "{{ vaultwarden_config_dir }}/config.json"
+vaultwarden_user: "vaultwarden"
 
-vaultwarden_admin_token: ~
-vaultwarden_yubico_client_id: ~
-vaultwarden_yubico_secret_key: ~
-vaultwarden_smtp_pass: ~
-vaultwarden_domain: ~
+vaultwarden_container_name: "vaultwarden"
+vaultwarden_container_image: "docker.io/vaultwarden/server"
+vaultwarden_container_image_tag: ~
+vaultwarden_container_image_ref: "{{ vaultwarden_container_image }}:{{ vaultwarden_container_image_tag | default(vaultwarden_version + '-alpine', true) }}"
 
-vaultwarden_smtp_host: ~
-vaultwarden_smtp_from: ~
-vaultwarden_smtp_port: ~
-vaultwarden_smtp_ssl: ~
+vaultwarden_container_ports:
+  - "80/tcp"
 
-vaultwarden_env_vars:
-  DOMAIN: "https://{{ vaultwarden_domain }}"
-  SIGNUPS_ALLOWED: "false"
-  ADMIN_TOKEN: "{{ vaultwarden_admin_token }}"
-  YUBICO_CLIENT_ID: "{{ vaultwarden_yubico_client_id }}"
-  YUBICO_SECRET_KEY: "{{ vaultwarden_yubico_secret_key }}"
-  SMTP_HOST: "{{ vaultwarden_smtp_host }}"
-  SMTP_FROM: "{{ vaultwarden_smtp_from }}"
-  SMTP_PORT: "{{ vaultwarden_smtp_port }}"
-  SMTP_SSL: "{{ vaultwarden_smtp_ssl }}"
+vaultwarden_http_proto: "https://"
+
+vaultwarden_default_config:
+  domain: ~
+  sends_allowed: true
+  disable_icon_download: false
+  signups_allowed: false
+  signups_verify: false
+  signups_verify_resend_time: 3600
+  signups_verify_resend_limit: 6
+  invitations_allowed: true
+  password_iterations: 100000
+  show_password_hint: true
+  admin_token: ~
+  invitation_org_name: Vaultwarden
+  ip_header: X-Real-IP
+  icon_cache_ttl: 2592000
+  icon_cache_negttl: 259200
+  icon_download_timeout: 10
+  icon_blacklist_non_global_ips: true
+  disable_2fa_remember: false
+  authenticator_disable_time_drift: false
+  require_device_email: false
+  reload_templates: false
+  log_timestamp_format: '%Y-%m-%d %H:%M:%S.%3f'
+  disable_admin_token: false
+  _enable_yubico: false
+  _enable_duo: false
+  _enable_smtp: true
+  smtp_host: ~
+  smtp_ssl: false
+  smtp_explicit_tls: false
+  smtp_port: 25
+  smtp_from: ~
+  smtp_from_name: Vaultwarden
+  smtp_timeout: 15
+  smtp_accept_invalid_certs: false
+  smtp_accept_invalid_hostnames: false
+  _enable_email_2fa: true
+  email_token_size: 6
+  email_expiration_time: 600
+  email_attempts_limit: 3
+
+vaultwarden_container_default_env: []

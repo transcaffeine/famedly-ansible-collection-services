@@ -1,0 +1,7 @@
+---
+- name: Restart vaultwarden
+  docker_container:
+    name: "{{ vaultwarden_container_name }}"
+    state: "started"
+    restart: yes
+  listen: "restart-vaultwarden"

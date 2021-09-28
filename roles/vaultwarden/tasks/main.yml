@@ -1,17 +1,38 @@
 ---
+- name: Ensure user is created
+  user:
+    name: "{{ vaultwarden_user }}"
+    state: present
+    system: yes
+  register: vaultwarden_user_res
+
 - name: create vaultwarden directory
   file:
+    path: "{{ vaultwarden_config_dir }}"
     state: directory
-    path: "{{ vaultwarden_home }}"
-  become: yes
+    mode: 0755
+    owner: "{{ vaultwarden_user_res.uid }}"
+    group: "{{ vaultwarden_user_res.group }}"
+    recurse: yes
+
+- name: Ensure configuration is templated
+  copy:
+    content: "{{ vaultwarden_config_merged | to_nice_json }}"
+    dest: "{{ vaultwarden_config_file }}"
+    mode: 0755
+    owner: "{{ vaultwarden_user_res.uid }}"
+    group: "{{ vaultwarden_user_res.group }}"
+  notify: "restart-vaultwarden"
 
 - name: deploy vaultwarden
   docker_container:
-    image: "{{ vaultwarden_container_image }}"
-    name: vaultwarden
-    labels: "{{ vaultwarden_docker_labels_complete }}"
-    env: "{{ vaultwarden_env_vars }}"
-    volumes:
-      - "{{ vaultwarden_home }}:/data"
+    image: "{{ vaultwarden_container_image_ref }}"
+    name: "{{ vaultwarden_container_name }}"
+    state: started
+    pull: yes
     restart_policy: unless-stopped
-  become: yes
+    user: "{{ vaultwarden_user_res.uid }}:{{ vaultwarden_user_res.group }}"
+    volumes: "{{ vaultwarden_container_volumes_merged }}"
+    ports: "{{ vaultwarden_container_ports }}"
+    env: "{{ vaultwarden_container_env_merged }}"
+    labels: "{{ vaultwarden_container_labels_merged }}"
