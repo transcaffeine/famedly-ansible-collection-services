@@ -1,5 +1,7 @@
 # `famedly.services` ansible collection
 
+![Matrix](https://img.shields.io/matrix/ansible-famedly:matrix.org)
+
 ## Scope
 
 This ansible collection consists of roles for various services used at famedly,
