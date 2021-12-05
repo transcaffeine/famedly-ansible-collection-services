@@ -1,5 +1,5 @@
 ---
-vaultwarden_version: "1.22.1"
+vaultwarden_version: "1.23.0"
 vaultwarden_config_dir: "/opt/vaultwarden/data"
 vaultwarden_config_file: "{{ vaultwarden_config_dir }}/config.json"
 vaultwarden_user: "vaultwarden"
