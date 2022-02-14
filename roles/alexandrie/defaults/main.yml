@@ -1,0 +1,69 @@
+---
+
+alexandrie_version: "TODO: once upstream has a prebuilt container image and release tagged, do here"
+
+alexandrie_base_path: "/opt/alexandrie"
+alexandrie_crate_index_path: "{{ alexandrie_base_path }}/crate-index"
+alexandrie_crate_storage_path: "{{ alexandrie_base_path }}/crate-storage"
+
+alexandrie_user: "alexandrie"
+alexandrie_domain: "crates.example.tld"
+alexandrie_uri: "https://{{ alexandrie_domain }}"
+
+alexandrie_git_remote_user: "alexandrie"
+#alexandrie_git_remote_pass:
+alexandrie_git_author_name: "Alexandrie"
+#alexandrie_git_author_email:
+alexandrie_git_branch: "master"
+#alexandrie_git_remote_host:
+#alexandrie_git_remote_path:
+
+alexandrie_container_name: "alexandrie"
+alexandrie_container_image: "registry.gitlab.com/famedly/company/devops/services/alexandrie"
+alexandrie_container_image_tag: "famedly"
+alexandrie_container_image_ref: "{{ alexandrie_container_image }}:{{ alexandrie_container_image_tag | default(alexandrie_version, true) }}"
+alexandrie_container_ports:
+  - "3000:3000"
+alexandrie_container_env: {}
+alexandrie_container_labels: {}
+alexandrie_container_volumes: []
+
+alexandrie_bind_address: "0.0.0.0:3000"
+
+alexandrie_enable_frontend: true
+alexandrie_frontend_title: "Alexandrie"
+alexandrie_frontend_description: "An alternative crate registry for Cargo, the Rust package manager."
+alexandrie_frontend_links:
+  "Github repository": "https://github.com/Hirevo/alexandrie"
+  "User documentation": "https://hirevo.github.io/alexandrie"
+
+# alexandrie_frontend_session_secret:
+
+alexandrie_auth_local_enable: false
+alexandrie_auth_local_allow_registration: false
+
+alexandrie_auth_github_enable: false
+#alexandrie_auth_github_client_id:
+#alexandrie_auth_github_client_secret:
+#alexandrie_auth_github_allowed_orgs:
+alexandrie_auth_github_allow_registration: false
+
+alexandrie_auth_gitlab_enable: false
+alexandrie_auth_gitlab_origin: "https://gitlab.com"
+#alexandrie_auth_gitlab_client_id:
+#alexandrie_auth_gitlab_client_secret:
+#alexandrie_auth_gitlab_allowed_groups:
+alexandrie_auth_gitlab_allow_registration: false
+
+alexandrie_database_user: "alexandrie"
+#alexandrie_database_pass:
+alexandrie_database_name: "alexandrie"
+#alexandrie_database_host:
+alexandrie_database_port: 5432
+alexandrie_database_url: >-2
+  {{
+    'postgresql://'
+    + alexandrie_database_user + ':' + alexandrie_database_pass
+    + '@' + alexandrie_database_host + (':' +  alexandrie_database_port if alexandrie_database_port else '')
+    + '/' + alexandrie_database_name
+  }}

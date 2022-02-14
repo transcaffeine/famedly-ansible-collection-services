@@ -1,0 +1,90 @@
+---
+
+- name: Ensure user '{{ alexandrie_user }}' is created
+  user:
+    name: "{{ alexandrie_user }}"
+    state: present
+    system: yes
+  register: alexandrie_user_res
+
+- name: Ensure directories are created
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ alexandrie_user_res.uid }}"
+    group: "{{ alexandrie_user_res.group }}"
+  loop:
+    - "{{ alexandrie_base_path }}"
+    - "{{ alexandrie_crate_storage_path }}"
+
+- name: Clone index git repository to {{ alexandrie_crate_index_path }}
+  git:
+    repo: "https://{{ alexandrie_git_remote_user }}:{{ alexandrie_git_remote_pass }}@{{ alexandrie_git_remote_host }}/{{ alexandrie_git_remote_path }}.git"
+    dest: "{{ alexandrie_crate_index_path }}"
+    version: "{{ alexandrie_git_branch | default(omit, True) }}"
+    update: no
+
+- name: Ensure index git repository permissions are correct
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "u=rwX,g=rX,o=rX"
+    owner: "{{ alexandrie_user_res.uid }}"
+    group: "{{ alexandrie_user_res.group }}"
+  loop:
+    - "{{ alexandrie_crate_index_path }}"
+
+- name: Ensure configuration is templated
+  template:
+    src: "alexandrie.toml.j2"
+    dest: "{{ alexandrie_base_path }}/config.toml"
+    mode: 0600
+    owner: "{{ alexandrie_user_res.uid }}"
+    group: "{{ alexandrie_user_res.group }}"
+  notify: "restart-alexandrie"
+
+- name: Ensure git credentials are written
+  copy:
+    content: "https://{{ alexandrie_git_remote_user }}:{{ alexandrie_git_remote_pass }}@{{ alexandrie_git_remote_host }}"
+    dest: "{{ alexandrie_base_path }}/.git-credentials"
+    mode: 0600
+    owner: "{{ alexandrie_user_res.uid }}"
+    group: "{{ alexandrie_user_res.group }}"
+  register: alexandrie_git_credentials
+  notify: "restart-alexandrie"
+
+- name: Ensure git author information is populated
+  copy:
+    content: |+2
+      [user]
+      	name = "{{ alexandrie_git_author_name }}"
+      	email = {{ alexandrie_git_author_email }}
+    dest: "{{ alexandrie_base_path }}/gitconfig"
+    mode: 0644
+    owner: "{{ alexandrie_user_res.uid }}"
+    group: "{{ alexandrie_user_res.group }}"
+
+- name: Ensure container image for alexandrie is present
+  community.docker.docker_image:
+    name: "{{ alexandrie_container_image_ref }}"
+    state: present
+    source: pull
+    force_source: "{{ 'true' if alexandrie_container_image_tag else 'false' }}"
+
+- name: Ensure container {{ alexandrie_container_name }} is started
+  docker_container:
+    image: "{{ alexandrie_container_image_ref }}"
+    name: "{{ alexandrie_container_name }}"
+    user: "{{ alexandrie_user_res.uid }}:{{ alexandrie_user_res.group }}"
+    volumes: "{{ alexandrie_container_volumes_merged }}"
+    ports: "{{ alexandrie_container_ports }}"
+    env: "{{ alexandrie_container_complete_env }}"
+    labels: "{{ alexandrie_container_labels_merged }}"
+    command:
+      - "/usr/bin/alexandrie"
+      - "-c"
+      - "{{ alexandrie_base_path }}/config.toml"
+    restart_policy: unless-stopped
+    state: started
+  register: alexandrie_container_status

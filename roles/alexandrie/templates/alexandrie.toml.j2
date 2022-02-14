@@ -1,0 +1,94 @@
+[general]
+bind_address = "{{ alexandrie_bind_address }}"
+
+[frontend]
+enabled = {{ 'true' if alexandrie_enable_frontend else 'false' }}
+title = "{{ alexandrie_frontend_title }}"
+description = "{{ alexandrie_frontend_description }}"
+# favicon = ""
+links = [
+{% for name, link in alexandrie_frontend_links.items() %}
+    { name = "{{ name }}", href = "{{ link }}" },
+{% endfor %}
+]
+
+[frontend.sessions]
+cookie_name = "alexandrie.sid"
+secret = "{{ alexandrie_frontend_session_secret }}"
+
+[frontend.assets]
+path = "assets"
+
+[frontend.templates]
+path = "templates"
+
+[frontend.auth]
+origin = "{{ alexandrie_uri }}"
+
+[frontend.auth.local]
+enabled = {{ 'true' if alexandrie_auth_local_enable else 'false' }}
+allow_registration = {{ 'true' if alexandrie_auth_local_allow_registration else 'false' }}
+
+[frontend.auth.github]
+enabled = {{ 'true' if alexandrie_auth_github_enable else 'false' }}
+{% if alexandrie_auth_github_enable %}
+client_id = "{{ alexandrie_auth_github_client_id }}"
+client_secret = "{{ alexandrie_auth_github_client_secret }}"
+{% if alexandrie_auth_github_allowed_orgs is defined %}
+allowed_organizations = [
+{% for org in alexandrie_auth_github_allowed_orgs %}
+    { name = "{{ org.name }}"
+    {%- if org.allowed_teams is defined -%}
+    , allowed_teams = [ "{{ org.allowed_teams | join('", "') }}" ]
+    {%- endif -%} 
+    },
+{% endfor %}
+]
+{% endif %}
+allow_registration = {{ 'true' if alexandrie_auth_github_allow_registration else 'false' }}
+{% else %}
+client_id = "GITHUB_OAUTH_CLIENT_ID"
+client_secret = "GITHUB_OAUTH_CLIENT_SECRET"
+allow_registration = true
+{% endif %}
+
+[frontend.auth.gitlab]
+enabled = {{ 'true' if alexandrie_auth_gitlab_enable else 'false' }}
+{% if alexandrie_auth_gitlab_enable %}
+origin = "{{ alexandrie_auth_gitlab_origin }}"
+client_id = "{{ alexandrie_auth_gitlab_client_id }}"
+client_secret = "{{ alexandrie_auth_gitlab_client_secret }}"
+{% if alexandrie_auth_gitlab_allowed_groups is defined %}
+allowed_groups = [
+{% for group in alexandrie_auth_gitlab_allowed_groups %}
+    "{{ group }}",
+{% endfor %}
+]
+{% endif %}
+allow_registration = {{ 'true' if alexandrie_auth_gitlab_allow_registration else 'false' }}
+{% else %}
+origin = "https://gitlab.com"
+client_id = "GITLAB_OAUTH_CLIENT_ID"
+client_secret = "GITLAB_OAUTH_CLIENT_SECRET"
+allow_registration = true
+{% endif %}
+
+[database]
+url = "{{ alexandrie_database_url }}"
+
+[index]
+type = "git2"
+path = "{{ alexandrie_crate_index_path }}"
+
+[storage]
+type = "disk"
+path = "{{ alexandrie_crate_storage_path }}"
+
+[syntect.syntaxes]
+type = "dump"
+path = "syntect/dumps/syntaxes.dump"
+
+[syntect.themes]
+type = "dump"
+path = "syntect/dumps/themes.dump"
+theme_name = "frontier-contrast"

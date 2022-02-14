@@ -1,0 +1,8 @@
+---
+
+- name: Restart {{ alexandrie_container_name }} container
+  docker_container:
+    name: "{{ alexandrie_container_name }}"
+    state: "started"
+    restart: yes
+  listen: "restart-alexandrie"

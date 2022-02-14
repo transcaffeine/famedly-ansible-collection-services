@@ -1,0 +1,14 @@
+---
+
+alexandrie_container_labels_merged: "{{ alexandrie_container_labels_base | combine(alexandrie_container_labels) }}"
+alexandrie_container_labels_base:
+  version: "{{ alexandrie_container_image_tag | default(alexandrie_version, true) }}"
+
+alexandrie_container_volumes_merged: "{{ alexandrie_container_volumes_base + alexandrie_container_volumes }}"
+alexandrie_container_volumes_base:
+  - "{{ alexandrie_base_path }}:{{ alexandrie_base_path }}:z"
+  - "{{ alexandrie_base_path }}/gitconfig:/.gitconfig:z"
+  - "{{ alexandrie_base_path }}/.git-credentials:/.git-credentials:z"
+
+alexandrie_container_base_env: {}
+alexandrie_container_complete_env: "{{ alexandrie_container_base_env | combine(alexandrie_container_env | default({})) }}"
