@@ -7,7 +7,7 @@ hedgedoc_db_database: "hedgedoc"
 hedgedoc_db_port: 5432
 hedgedoc_db_dialect: postgres
 
-hedgedoc_version: 1.9.0
+hedgedoc_version: 1.9.2
 
 hedgedoc_user: "hedgedoc"
 
