@@ -69,6 +69,7 @@
   loop: "{{ zammad_containers }}"
   loop_control:
     loop_var: container
+    label: "{{ container.image_name }} ({{ container.name }})"
 
 - name: Ensure zammad network is present
   docker_network:
@@ -96,3 +97,4 @@
   loop: "{{ zammad_containers }}"
   loop_control:
     loop_var: container
+    label: "{{ container.name }}"
