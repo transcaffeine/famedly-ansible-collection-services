@@ -141,6 +141,8 @@ zammad_containers:
     image_tag: "zammad-{{ zammad_container_version }}"
     ports: "{{ zammad_config_port }}"
     labels: "{{ zammad_labels.nginx | default({}) }}"
+    env:
+      NGINX_SERVER_SCHEME: https
     restart_policy: "unless-stopped"
     command: "zammad-nginx"
     volumes:
