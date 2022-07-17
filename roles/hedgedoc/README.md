@@ -1,11 +1,11 @@
-# hedgedoc
+# `famedly.services.hedgedoc` ansible role
 
 Deploys a containerised HedgeDoc instance with postgres as the default backend.
 
 ## Requirements
 
-- preconfigured database
-- docker
+- preconfigured postgresql database, f.ex. with `famedly.base.postgresql_client_access`
+- docker daemon running, used for the deployment
 
 ## Role Variables
 
@@ -32,7 +32,6 @@ See `defaults/main.yml` and `vars/main.yml` for available variables.
 
 AGPL-3.0-only
 
-Author Information
-------------------
+## Author Information
 
 - Jan Christian Grünhage <jcgruenhage@famedly.com>
