@@ -1,39 +1,23 @@
-Role Name
-=========
+# `famedly.services.vaultwarden' ansible role
 
-Installs an vaultwarden docker image
+Installs vaultwarden, a self-hosted bitwarden server implementation, using docker.
 
-Requirements
-------------
+## Prerequisites
 
-Python3 and docker need to be installed
+It is assumed the target host has a running docker daemon which can be used to
+deploy the container, a user called `vaultwarden_user` may be created and
+the `vaultwarden_config_dir` is writeable.
 
-Role Variables
---------------
+## Configuration
 
-Look in the defaults directory
-vaultwarden_docker_labels: {}
+Overwrite the default `vaultwarden_docker_labels: {}` if you are
+routing your traffic based on labels (e.g.: traefik, nginx-proxy-manager)
 
-Dependencies
-------------
 
-depends on vaultwarden docker image
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
+## License
 
 GNU Affero General Public License v3
 
-Author Information
-------------------
+## Author Information
 
 Famedly GmbH, famedly.de

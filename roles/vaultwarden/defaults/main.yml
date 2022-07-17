@@ -1,5 +1,5 @@
 ---
-vaultwarden_version: "1.23.0"
+vaultwarden_version: "1.25.1"
 vaultwarden_config_dir: "/opt/vaultwarden/data"
 vaultwarden_config_file: "{{ vaultwarden_config_dir }}/config.json"
 vaultwarden_user: "vaultwarden"
@@ -8,7 +8,10 @@ vaultwarden_container_name: "vaultwarden"
 vaultwarden_container_image: "docker.io/vaultwarden/server"
 vaultwarden_container_image_tag: ~
 vaultwarden_container_image_ref: "{{ vaultwarden_container_image }}:{{ vaultwarden_container_image_tag | default(vaultwarden_version + '-alpine', true) }}"
-
+vaultwarden_container_default_env: []
+vaultwarden_container_etc_hosts: ~
+vaultwarden_container_networks: ~
+vaultwarden_container_restart_policy: unless-stopped
 vaultwarden_container_ports:
   - "80/tcp"
 
@@ -54,5 +57,3 @@ vaultwarden_default_config:
   email_token_size: 6
   email_expiration_time: 600
   email_attempts_limit: 3
-
-vaultwarden_container_default_env: []

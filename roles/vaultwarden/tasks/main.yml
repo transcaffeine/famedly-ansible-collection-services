@@ -6,7 +6,7 @@
     system: yes
   register: vaultwarden_user_res
 
-- name: create vaultwarden directory
+- name: Ensure vaultwarden config directory exists and is owned by vaultwarden user
   file:
     path: "{{ vaultwarden_config_dir }}"
     state: directory
@@ -24,15 +24,27 @@
     group: "{{ vaultwarden_user_res.group }}"
   notify: "restart-vaultwarden"
 
-- name: deploy vaultwarden
+- name: Ensure vaultwarden container image is present
+  docker_image:
+    name: "{{ vaultwarden_container_image_ref }}"
+    state: present
+    source: pull
+    force_source: "{{ vaultwarden_container_image_tag | default(false, true) }}"
+  register: vaultwarden_container_image_pull
+  until: vaultwarden_container_image_pull is succeeded
+  retries: 5
+  delay: 3
+
+- name: Ensure vaultwarden container image is running
   docker_container:
     image: "{{ vaultwarden_container_image_ref }}"
     name: "{{ vaultwarden_container_name }}"
-    state: started
-    pull: yes
-    restart_policy: unless-stopped
-    user: "{{ vaultwarden_user_res.uid }}:{{ vaultwarden_user_res.group }}"
-    volumes: "{{ vaultwarden_container_volumes_merged }}"
-    ports: "{{ vaultwarden_container_ports }}"
     env: "{{ vaultwarden_container_env_merged }}"
+    user: "{{ vaultwarden_user_res.uid }}:{{ vaultwarden_user_res.group }}"
+    ports: "{{ vaultwarden_container_ports | default(omit, true) }}"
+    networks: "{{ vaultwarden_container_networks | default(omit, true) }}"
+    etc_hosts: "{{ vaultwarden_container_etc_hosts | default(omit, true) }}"
     labels: "{{ vaultwarden_container_labels_merged }}"
+    volumes: "{{ vaultwarden_container_volumes_merged }}"
+    restart_policy: "{{ vaultwarden_container_restart_policy }}"
+    state: started
