@@ -19,8 +19,8 @@
 # Xms represents the initial size of total heap space
 # Xmx represents the maximum size of total heap space
 
--Xms1g
--Xmx1g
+-Xms{{ zammad_elastic_min_mem_in_mb }}m
+-Xmx{{ zammad_elastic_max_mem_in_mb }}m
 
 ################################################################
 ## Expert settings

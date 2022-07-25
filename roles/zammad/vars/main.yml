@@ -17,8 +17,6 @@ zammad_directories:
 zammad_elasticsearch_files:
   - src: elasticsearch.yml
     mode: 660
-  - src: jvm.options
-    mode: 660
   - src: log4j2.properties
     mode: 660
 

@@ -39,6 +39,16 @@
   notify: Restart elasticsearch
   loop: "{{ zammad_elasticsearch_files }}"
 
+- name: Template elasticsearch jvm options
+  template:
+    src: jvm.options.j2
+    dest: "{{ zammad_base_path }}/elasticsearch-config/jvm.options"
+    owner: "{{ zammad_user_res.uid }}"
+    group: "{{ zammad_user_res.group }}"
+    mode: "0660"
+  tags: [ 'prepare', 'prepare-zammad' ]
+  notify: Restart elasticsearch
+
 - name: Template fake /etc/passwd for postgres
   template:
     src: postgres-passwd.j2
@@ -91,6 +101,7 @@
     labels: "{{ container.labels | default(omit) }}"
     volumes: "{{ container.volumes | default(omit) }}"
     restart_policy: "{{ container.restart_policy }}"
+    memory: "{{ container.memory_limit | default(omit) }}"
     state: "{{ container.state | default('started') }}"
     comparisons:
       networks: strict
