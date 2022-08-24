@@ -57,5 +57,3 @@
     command:
       - "-c"
       - "/opt/ktra/config.toml"
-
-

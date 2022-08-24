@@ -43,4 +43,3 @@
       volumes:
         - "{{ murmur_base_path }}:{{ murmur_base_path }}"
     become: true
-

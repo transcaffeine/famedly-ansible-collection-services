@@ -15,4 +15,3 @@ ktra_container_labels: {}
 ktra_container_ports:
   - 8000:8000
 ktra_container_volumes: []
-
