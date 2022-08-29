@@ -20,7 +20,6 @@ with no direct relation to any customers.
 - [`matomo`](roles/matomo/README.md): role for [matomo](https://matomo.org/) (formerly known as piwik), a web analytics tool
 - [`murmur`](roles/murmur/README.md): deploys [murmur](https://www.mumble.info/downloads/), the mumble server software.
 - [`snipe-it`](roles/snipe-it/README.md): used for deploying [SnipeIt](https://snipeitapp.com/), an open-source asset management.
-- [`zammad`](roles/zammad/README.md): deploys [Zammad](https://zammad.org/), the open source user support and ticketing software.
 
 ## License
 

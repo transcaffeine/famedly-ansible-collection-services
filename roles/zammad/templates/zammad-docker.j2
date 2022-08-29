@@ -1,3 +1,0 @@
-#! /bin/bash
-echo "docker $1"
-sudo docker $1 {% for container in zammad_containers%}{{ container.name }} {% endfor %}

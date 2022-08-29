@@ -1,5 +1,0 @@
----
-- hosts: [ zammad ]
-  become: true
-  roles:
-    - zammad

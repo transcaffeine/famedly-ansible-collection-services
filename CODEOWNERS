@@ -4,4 +4,3 @@ roles/hedgedoc/ @jcgruenhage
 roles/matomo/ @jcgruenhage
 roles/murmur/ @ratzupaltuff
 roles/snipe-it/ @transcaffeine @jadyn.dev
-roles/zammad/ @jadyn.dev @transcaffeine
