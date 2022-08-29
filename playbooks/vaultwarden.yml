@@ -1,5 +1,5 @@
 ---
-- hosts: [ vaultwarden ]
+- hosts: [vaultwarden]
   become: true
   roles:
     - vaultwarden
