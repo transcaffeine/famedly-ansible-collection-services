@@ -19,7 +19,7 @@ alexandrie_git_branch: "master"
 #alexandrie_git_remote_path:
 
 alexandrie_container_name: "alexandrie"
-alexandrie_container_image: "registry.gitlab.com/famedly/company/devops/services/alexandrie"
+alexandrie_container_image: "registry.gitlab.com/famedly/company/backend/services/alexandrie"
 alexandrie_container_image_tag: "famedly"
 alexandrie_container_image_ref: "{{ alexandrie_container_image }}:{{ alexandrie_container_image_tag | default(alexandrie_version, true) }}"
 alexandrie_container_ports:

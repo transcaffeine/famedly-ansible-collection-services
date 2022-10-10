@@ -19,7 +19,7 @@
 
 - name: Clone index repository
   git:
-    repo: "https://{{ ktra_git_user }}:{{ ktra_git_pass }}@gitlab.com/famedly/company/devops/crates-index.git"
+    repo: "https://{{ ktra_git_user }}:{{ ktra_git_pass }}@gitlab.com/famedly/infra/crates-index.git"
     dest: "{{ ktra_base_path }}/index"
     reference: "{{ ktra_git_branch }}"
     update: no
