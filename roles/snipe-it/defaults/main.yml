@@ -1,7 +1,7 @@
 ---
 
 snipe_it_user: "snipe-it"
-snipe_it_version: 6.0.7
+snipe_it_version: 6.0.14
 snipe_it_base_path: "/opt/snipe-it"
 snipe_it_data_path: "{{ snipe_it_base_path }}/data"
 snipe_it_keys_path: "{{ snipe_it_base_path }}/keys"
