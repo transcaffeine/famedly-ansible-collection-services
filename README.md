@@ -14,7 +14,6 @@ with no direct relation to any customers.
   user authentication, aswell as a rich API and an optional web frontend.
 - [`bitwarden`](roles/bitwarden/README.md): role for deploying [vaultwarden](https://github.com/dani-garcia/vaultwarden)
   (formerly known as `bitwarden_rs`), a bitwarden compatible server, deployed using a docker container.
-- [`ghost`](roles/ghost/README.md): a role for deploying the blogging platform [ghost](https://ghost.org/blog/).
 - [`hedgedoc`](roles/hedgedoc/README.md): deploys [hedgedoc](https://hedgedoc.org/) (formerly known as `CodiMD`),
   a polished and modern alternative to etherpad & co.
 - [`ktra`](roles/ktra/README.md): a role for [ktra](https://book.ktra.dev/), a little self hostable cargo crate registry
