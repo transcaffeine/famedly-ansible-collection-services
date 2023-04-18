@@ -1,31 +1,31 @@
 ---
 - name: Ensure user is created
-  user:
+  ansible.builtin.user:
     name: "{{ vaultwarden_user }}"
     state: present
-    system: yes
+    system: true
   register: vaultwarden_user_res
 
 - name: Ensure vaultwarden config directory exists and is owned by vaultwarden user
-  file:
+  ansible.builtin.file:
     path: "{{ vaultwarden_config_dir }}"
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: "{{ vaultwarden_user_res.uid }}"
     group: "{{ vaultwarden_user_res.group }}"
-    recurse: yes
+    recurse: true
 
 - name: Ensure configuration is templated
-  copy:
+  ansible.builtin.copy:
     content: "{{ vaultwarden_config_merged | to_nice_json }}"
     dest: "{{ vaultwarden_config_file }}"
-    mode: 0755
+    mode: "0755"
     owner: "{{ vaultwarden_user_res.uid }}"
     group: "{{ vaultwarden_user_res.group }}"
   notify: "restart-vaultwarden"
 
 - name: Ensure vaultwarden container image is present
-  docker_image:
+  community.docker.docker_image:
     name: "{{ vaultwarden_container_image_reference }}"
     state: present
     source: pull
@@ -36,7 +36,7 @@
   delay: 3
 
 - name: Ensure vaultwarden container image is running
-  docker_container:
+  community.docker.docker_container:
     image: "{{ vaultwarden_container_image_reference }}"
     name: "{{ vaultwarden_container_name }}"
     env: "{{ vaultwarden_container_env_merged }}"

@@ -3,7 +3,7 @@ vaultwarden_container_labels_merged: "{{ vaultwarden_container_labels_base | com
 vaultwarden_container_labels_base:
   version: "{{ vaultwarden_version }}"
 
-vaultwarden_container_volumes_merged: "{{ vaultwarden_container_volumes_base + vaultwarden_container_volumes | default ([]) }}"
+vaultwarden_container_volumes_merged: "{{ vaultwarden_container_volumes_base + vaultwarden_container_volumes | default([]) }}"
 vaultwarden_container_volumes_base:
   - "{{ vaultwarden_config_dir }}:/data:rw"
 
