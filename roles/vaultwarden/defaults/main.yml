@@ -5,9 +5,27 @@ vaultwarden_config_file: "{{ vaultwarden_config_dir }}/config.json"
 vaultwarden_user: "vaultwarden"
 
 vaultwarden_container_name: "vaultwarden"
-vaultwarden_container_image: "docker.io/vaultwarden/server"
-vaultwarden_container_image_tag: ~
-vaultwarden_container_image_ref: "{{ vaultwarden_container_image }}:{{ vaultwarden_container_image_tag | default(vaultwarden_version + '-alpine', true) }}"
+vaultwarden_container_image_reference: >-
+  {{
+    vaultwarden_container_image_repository
+    + ':'
+    + vaultwarden_container_image_tag | default(vaultwarden_version + '-alpine', true)
+  }}
+vaultwarden_container_image_repository: >-
+  {{
+    (
+      container_registries[vaultwarden_container_image_registry]
+      | default(vaultwarden_container_image_registry)
+    )
+    + '/'
+    + vaultwarden_container_image_namespace | default('')
+    + vaultwarden_container_image_name
+  }}
+vaultwarden_container_image_registry: "docker.io"
+vaultwarden_container_image_namespace: "vaultwarden/"
+vaultwarden_container_image_name: "server"
+# vaultwarden_container_image_tag
+
 vaultwarden_container_default_env: []
 vaultwarden_container_etc_hosts: ~
 vaultwarden_container_networks: ~

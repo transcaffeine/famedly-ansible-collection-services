@@ -26,7 +26,7 @@
 
 - name: Ensure vaultwarden container image is present
   docker_image:
-    name: "{{ vaultwarden_container_image_ref }}"
+    name: "{{ vaultwarden_container_image_reference }}"
     state: present
     source: pull
     force_source: "{{ vaultwarden_container_image_tag | default(false, true) }}"
@@ -37,7 +37,7 @@
 
 - name: Ensure vaultwarden container image is running
   docker_container:
-    image: "{{ vaultwarden_container_image_ref }}"
+    image: "{{ vaultwarden_container_image_reference }}"
     name: "{{ vaultwarden_container_name }}"
     env: "{{ vaultwarden_container_env_merged }}"
     user: "{{ vaultwarden_user_res.uid }}:{{ vaultwarden_user_res.group }}"
