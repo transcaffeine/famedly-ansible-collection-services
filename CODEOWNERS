@@ -1,6 +1,6 @@
-roles/bitwarden/ @ratzupaltuff @jcgruenhage
-roles/ghost/ @ratzupaltuff
-roles/hedgedoc/ @jcgruenhage
-roles/matomo/ @jcgruenhage
-roles/murmur/ @ratzupaltuff
-roles/snipe-it/ @transcaffeine @jadyn.dev
+* @famedly/infrastructure
+
+roles/bitwarden/ @jcgruenhage @famedly/infrastructure
+roles/hedgedoc/ @jcgruenhage @famedly/infrastructure
+roles/matomo/ @jcgruenhage @famedly/infrastructure
+roles/snipe-it/ @jdreichmann @famedly/infrastructure
