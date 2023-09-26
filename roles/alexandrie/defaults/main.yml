@@ -11,12 +11,12 @@ alexandrie_domain: "crates.example.tld"
 alexandrie_uri: "https://{{ alexandrie_domain }}"
 
 alexandrie_git_remote_user: "alexandrie"
-#alexandrie_git_remote_pass:
+# alexandrie_git_remote_pass:
 alexandrie_git_author_name: "Alexandrie"
-#alexandrie_git_author_email:
+# alexandrie_git_author_email:
 alexandrie_git_branch: "master"
-#alexandrie_git_remote_host:
-#alexandrie_git_remote_path:
+# alexandrie_git_remote_host:
+# alexandrie_git_remote_path:
 
 alexandrie_container_name: "alexandrie"
 alexandrie_container_image: "registry.gitlab.com/famedly/company/backend/services/alexandrie"
@@ -43,22 +43,22 @@ alexandrie_auth_local_enable: false
 alexandrie_auth_local_allow_registration: false
 
 alexandrie_auth_github_enable: false
-#alexandrie_auth_github_client_id:
-#alexandrie_auth_github_client_secret:
-#alexandrie_auth_github_allowed_orgs:
+# alexandrie_auth_github_client_id:
+# alexandrie_auth_github_client_secret:
+# alexandrie_auth_github_allowed_orgs:
 alexandrie_auth_github_allow_registration: false
 
 alexandrie_auth_gitlab_enable: false
 alexandrie_auth_gitlab_origin: "https://gitlab.com"
-#alexandrie_auth_gitlab_client_id:
-#alexandrie_auth_gitlab_client_secret:
-#alexandrie_auth_gitlab_allowed_groups:
+# alexandrie_auth_gitlab_client_id:
+# alexandrie_auth_gitlab_client_secret:
+# alexandrie_auth_gitlab_allowed_groups:
 alexandrie_auth_gitlab_allow_registration: false
 
 alexandrie_database_user: "alexandrie"
-#alexandrie_database_pass:
+# alexandrie_database_pass:
 alexandrie_database_name: "alexandrie"
-#alexandrie_database_host:
+# alexandrie_database_host:
 alexandrie_database_port: 5432
 alexandrie_database_url: >-2
   {{

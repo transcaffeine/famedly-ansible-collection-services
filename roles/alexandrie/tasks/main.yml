@@ -4,14 +4,14 @@
   user:
     name: "{{ alexandrie_user }}"
     state: present
-    system: yes
+    system: true
   register: alexandrie_user_res
 
 - name: Ensure directories are created
   file:
     path: "{{ item }}"
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: "{{ alexandrie_user_res.uid }}"
     group: "{{ alexandrie_user_res.group }}"
   loop:
@@ -23,7 +23,7 @@
     repo: "https://{{ alexandrie_git_remote_user }}:{{ alexandrie_git_remote_pass }}@{{ alexandrie_git_remote_host }}/{{ alexandrie_git_remote_path }}.git"
     dest: "{{ alexandrie_crate_index_path }}"
     version: "{{ alexandrie_git_branch | default(omit, True) }}"
-    update: no
+    update: false
 
 - name: Ensure index git repository permissions are correct
   file:
@@ -39,7 +39,7 @@
   template:
     src: "alexandrie.toml.j2"
     dest: "{{ alexandrie_base_path }}/config.toml"
-    mode: 0600
+    mode: "0600"
     owner: "{{ alexandrie_user_res.uid }}"
     group: "{{ alexandrie_user_res.group }}"
   notify: "restart-alexandrie"
@@ -48,7 +48,7 @@
   copy:
     content: "https://{{ alexandrie_git_remote_user }}:{{ alexandrie_git_remote_pass }}@{{ alexandrie_git_remote_host }}"
     dest: "{{ alexandrie_base_path }}/.git-credentials"
-    mode: 0600
+    mode: "0600"
     owner: "{{ alexandrie_user_res.uid }}"
     group: "{{ alexandrie_user_res.group }}"
   register: alexandrie_git_credentials
@@ -61,7 +61,7 @@
       	name = "{{ alexandrie_git_author_name }}"
       	email = {{ alexandrie_git_author_email }}
     dest: "{{ alexandrie_base_path }}/gitconfig"
-    mode: 0644
+    mode: "0644"
     owner: "{{ alexandrie_user_res.uid }}"
     group: "{{ alexandrie_user_res.group }}"
 
