@@ -12,7 +12,7 @@ with no direct relation to any customers.
 - [`alexandrie`](roles/alexandrie/README.md): deploys [alexandrie](https://hirevo.github.io/alexandrie/introduction.html),
   a crate registry (for rust) which is selfhosted and features local and external
   user authentication, aswell as a rich API and an optional web frontend.
-- [`bitwarden`](roles/bitwarden/README.md): role for deploying [vaultwarden](https://github.com/dani-garcia/vaultwarden)
+- [`vaultwarden`](roles/vaultwarden/README.md): role for deploying [vaultwarden](https://github.com/dani-garcia/vaultwarden)
   (formerly known as `bitwarden_rs`), a bitwarden compatible server, deployed using a docker container.
 - [`hedgedoc`](roles/hedgedoc/README.md): deploys [hedgedoc](https://hedgedoc.org/) (formerly known as `CodiMD`),
   a polished and modern alternative to etherpad & co.
