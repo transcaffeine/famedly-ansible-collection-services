@@ -4,6 +4,9 @@ This ansible role deploys [alexandrie](https://hirevo.github.io/alexandrie/),
 a crate registry which features an optional web frontend and a rich API,
 using a `docker` container.
 
+**warning: This role is currently unmaintained**
+=======================================
+
 ## Usage
 
 ### Crate index
