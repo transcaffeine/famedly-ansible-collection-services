@@ -24,6 +24,7 @@
 - name: Template laravel env
   copy:
     dest: "{{ snipe_it_config_file }}"
+    mode: "0664"
     content: |
       {% for kv in snipe_it_config_merged | combine(snipe_it_container_env) | dict2items %}
       {{ kv.key }}="{{ kv.value }}"

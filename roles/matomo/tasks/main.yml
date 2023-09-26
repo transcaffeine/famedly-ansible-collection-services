@@ -1,6 +1,6 @@
 ---
-- name: launch redis
-  become: yes
+- name: Launch redis
+  become: true
   docker_container:
     name: redis
     image: "{{ redis_docker_image }}"
@@ -10,8 +10,8 @@
       - /opt/redis/data:/data
     restart_policy: unless-stopped
 
-- name: launch mariadb
-  become: yes
+- name: Launch mariadb
+  become: true
   docker_container:
     name: mariadb
     image: "{{ mariadb_docker_image }}"
@@ -25,8 +25,8 @@
       MYSQL_PASSWORD: "{{ matomo_db_password }}"
     restart_policy: unless-stopped
 
-- name: launch matomo
-  become: yes
+- name: Launch matomo
+  become: true
   docker_container:
     name: matomo
     image: "{{ matomo_docker_image }}"

@@ -1,11 +1,11 @@
 ---
 redis_version: "6.2.7"
 redis_docker_image: "docker.io/redis:{{ redis_version }}-alpine"
-redis_docker_labels: {} #override
+redis_docker_labels: {} # override
 
 mariadb_version: "10.7.3"
 mariadb_docker_image: "docker.io/mariadb:{{ mariadb_version }}"
-mariadb_docker_labels: {} #override
+mariadb_docker_labels: {} # override
 
 # matomo_version has no impact as the application files are persisted
 # as a docker volume.
@@ -15,4 +15,4 @@ matomo_db_name: "matomo"
 matomo_db_user: "matomo"
 matomo_docker_image: "docker.io/matomo:{{ matomo_version }}-apache"
 matomo_docker_ports: []
-matomo_docker_labels: {} #override
+matomo_docker_labels: {} # override
