@@ -4,14 +4,14 @@
   user:
     name: "{{ ktra_user }}"
     state: present
-    system: yes
+    system: true
   register: ktra_user_res
 
 - name: Ensure directories are created
   file:
     path: "{{ item }}"
     state: directory
-    mode: 0755
+    mode: "0755"
     owner: "{{ ktra_user_res.uid }}"
     group: "{{ ktra_user_res.group }}"
   loop:
@@ -21,8 +21,8 @@
   git:
     repo: "https://{{ ktra_git_user }}:{{ ktra_git_pass }}@gitlab.com/famedly/infra/crates-index.git"
     dest: "{{ ktra_base_path }}/index"
-    reference: "{{ ktra_git_branch }}"
-    update: no
+    reference: "{{ ktra_git_branch }}" # noqa: latest[git]
+    update: false
 
 - name: Ensure configuration is templated
   copy:
@@ -35,7 +35,7 @@
       git_name = "{{ ktra_git_name }}"
       branch = "{{ ktra_git_branch }}"
     dest: "{{ ktra_base_path }}/config.toml"
-    mode: 0600
+    mode: "0600"
     owner: "{{ ktra_user_res.uid }}"
     group: "{{ ktra_user_res.group }}"
   notify: "restart-ktra"
@@ -45,7 +45,7 @@
     image: "{{ ktra_container_image_ref }}"
     name: "{{ ktra_container_name }}"
     state: started
-    pull: yes
+    pull: true
     restart_policy: unless-stopped
     user: "{{ ktra_user_res.uid }}:{{ ktra_user_res.group }}"
     volumes: "{{ ktra_container_volumes_merged }}"

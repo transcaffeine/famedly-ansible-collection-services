@@ -4,5 +4,5 @@
   docker_container:
     name: "{{ ktra_container_name }}"
     state: "started"
-    restart: yes
+    restart: true
   listen: "restart-ktra"
