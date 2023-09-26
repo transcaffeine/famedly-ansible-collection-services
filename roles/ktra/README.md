@@ -3,6 +3,10 @@ ktra
 
 Deploys a containerized ktra instance.
 
+**warning: This role is currently unmaintained**
+=======================================
+
+
 Requirements
 ------------
 
