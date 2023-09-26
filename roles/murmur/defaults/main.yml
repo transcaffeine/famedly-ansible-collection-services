@@ -1,6 +1,6 @@
 ---
 murmur_version: "1.3.1"
 murmur_docker_ports: ["64738:64738"]
-murmur_docker_labels: 
+murmur_docker_labels:
   version: "{{ murmur_version }}"
 murmur_base_path: "/opt/murmur"

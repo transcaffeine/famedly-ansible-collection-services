@@ -4,10 +4,10 @@ murmur_group_name: murmur
 murmur_docker_name: murmur
 murmur_docker_image: "registry.gitlab.com/famedly/containers/murmur:{{ murmur_version }}"
 murmur_config_path: "{{ murmur_base_path }}/murmur-config.ini"
-murmur_db_path: " {{murmur_base_path }}/murmur.sqlite"
-murmur_logfile_path: "{{murmur_base_path}}/murmur.log"
+murmur_db_path: " {{ murmur_base_path }}/murmur.sqlite"
+murmur_logfile_path: "{{ murmur_base_path }}/murmur.log"
 murmur_config:
   - welcometext: "Welcome to Murmur"
-  - serverpassword: 
+  - serverpassword:
   - bandwidth: 72000
   - users: 100 //maxusers

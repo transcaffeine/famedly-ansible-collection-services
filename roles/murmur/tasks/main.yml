@@ -1,45 +1,46 @@
 ---
-  - name: Add the user '{{ murmur_user_name }}'
-    user:
-      name: '{{ murmur_user_name }}'
-      comment: User to run murmur-server
-      create_home: false
-    register: murmur_user
-    become: true
+- name: Add the user '{{ murmur_user_name }}'
+  user:
+    name: '{{ murmur_user_name }}'
+    comment: User to run murmur-server
+    create_home: false
+  register: murmur_user
+  become: true
 
-  - name: create directory for murmur config, data and sqlite
-    file:
-      path: '{{ murmur_base_path }}'
-      state: directory
-      owner: "{{ murmur_user.name }}"
-      group: "{{ murmur_user.group }}"
-    become: true
-  
-  - name: copy config at the right location
-    template:
-      src: murmur-config.ini
-      dest: "{{ murmur_config_path }}"
-      owner: "{{ murmur_user.name }}"
-      group: "{{ murmur_user.group }}"
-      mode: '0644'
-    become: true
+- name: Create directory for murmur config, data and sqlite
+  file:
+    path: '{{ murmur_base_path }}'
+    state: directory
+    mode: "0755"
+    owner: "{{ murmur_user.name }}"
+    group: "{{ murmur_user.group }}"
+  become: true
 
-  - name: install murmur with docker
-    docker_container:
-      name: "{{ murmur_docker_name }}"
-      image: "{{ murmur_docker_image }}"
-      ports: "{{ murmur_docker_ports }}"
-      labels: "{{ murmur_docker_labels }}"
-      restart_policy: unless-stopped
-      recreate: true
-      pull: true
-      entrypoint: 
-        - "/usr/bin/murmurd"
-        - "-fg"
-        - "-v"
-        - "-ini {{ murmur_config_path }}"
-          #        - "-supw testtest"
-      user: "{{ murmur_user.uid }}:{{ murmur_user.group }}"
-      volumes:
-        - "{{ murmur_base_path }}:{{ murmur_base_path }}"
-    become: true
+- name: Copy config at the right location
+  template:
+    src: murmur-config.ini
+    dest: "{{ murmur_config_path }}"
+    owner: "{{ murmur_user.name }}"
+    group: "{{ murmur_user.group }}"
+    mode: '0644'
+  become: true
+
+- name: Install murmur with docker
+  docker_container:
+    name: "{{ murmur_docker_name }}"
+    image: "{{ murmur_docker_image }}"
+    ports: "{{ murmur_docker_ports }}"
+    labels: "{{ murmur_docker_labels }}"
+    restart_policy: unless-stopped
+    recreate: true
+    pull: true
+    entrypoint:
+      - "/usr/bin/murmurd"
+      - "-fg"
+      - "-v"
+      - "-ini {{ murmur_config_path }}"
+        #        - "-supw testtest"
+    user: "{{ murmur_user.uid }}:{{ murmur_user.group }}"
+    volumes:
+      - "{{ murmur_base_path }}:{{ murmur_base_path }}"
+  become: true
