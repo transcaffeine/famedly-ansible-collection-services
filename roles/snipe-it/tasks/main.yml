@@ -4,7 +4,7 @@
   user:
     name: "{{ snipe_it_user }}"
     state: present
-    system: yes
+    system: true
   register: snipe_it_user_res
 
 - name: Ensure directories are created
@@ -12,20 +12,20 @@
     path: "{{ item.path }}"
     mode: "{{ item.mode | default('0750') }}"
     state: directory
-  when: item.only is undefined or item.only == True
+  when: item.only is undefined or item.only
   loop:
     - path: "{{ snipe_it_base_path }}"
     - path: "{{ snipe_it_data_path }}"
     - path: "{{ snipe_it_keys_path }}"
     - path: "{{ snipe_it_dumps_path }}"
     - path: "{{ snipe_it_builtin_database_data_path }}"
-      only: "{{ snipe_it_builtin_database_enable|bool }}"
+      only: "{{ snipe_it_builtin_database_enable | bool }}"
 
 - name: Template laravel env
   copy:
     dest: "{{ snipe_it_config_file }}"
     content: |
-      {% for kv in snipe_it_config_merged|combine(snipe_it_container_env)|dict2items %}
+      {% for kv in snipe_it_config_merged | combine(snipe_it_container_env) | dict2items %}
       {{ kv.key }}="{{ kv.value }}"
       {% endfor %}
 
@@ -60,4 +60,4 @@
       snipe-mysql: "{{ snipe_mysql_container.container.NetworkSettings.Networks.bridge.IPAddress }}"
     restart_policy: unless-stopped
     state: started
-    pull: yes
+    pull: true
