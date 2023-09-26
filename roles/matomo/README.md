@@ -3,6 +3,9 @@ Matomo
 
 Deploy Matomo (including redis and mariadb) using docker.
 
+**warning: This role is currently unmaintained**
+=======================================
+
 Requirements
 ------------
 
