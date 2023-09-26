@@ -4,5 +4,5 @@
   docker_container:
     name: "{{ hedgedoc_container_name }}"
     state: "started"
-    restart: yes
+    restart: true
   listen: "restart-hedgedoc"
