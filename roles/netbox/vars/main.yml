@@ -1,0 +1,63 @@
+---
+
+netbox_flat_config:
+  ALLOWED_HOSTS: "{{ netbox_allowed_hosts }}"
+
+  DATABASE:
+    ENGINE: "django.db.backends.postgresql"
+    NAME: "{{ netbox_postgres_name }}"
+    USER: "{{ netbox_postgres_user }}"
+    PASSWORD: "{{ netbox_postgres_password }}"
+    HOST: "{{ netbox_postgres_host }}"
+
+  REDIS:
+    "tasks":
+      HOST: "{{ netbox_redis_host }}"
+      PORT: "{{ netbox_redis_port }}"
+      USERNAME: "{{ netbox_redis_username }}"
+      PASSWORD: "{{ netbox_redis_password }}"
+      DATABASE: "{{ netbox_redis_tasks_db }}"
+      SSL: "{{ netbox_redis_ssl }}"
+    "caching":
+      HOST: "{{ netbox_redis_host }}"
+      PORT: "{{ netbox_redis_port }}"
+      USERNAME: "{{ netbox_redis_username }}"
+      PASSWORD: "{{ netbox_redis_password }}"
+      DATABASE: "{{ netbox_redis_cache_db }}"
+      SSL: "{{ netbox_redis_ssl }}"
+
+  SECRET_KEY: "{{ netbox_secret_key }}"
+
+  ALLOW_TOKEN_RETRIEVAL: "{{ netbox_allow_token_retrival }}"
+  CSRF_COOKIE_SECURE: "{{ netbox_secure_cookies }}"
+  SESSION_COOKIE_SECURE: "{{ netbox_secure_cookies }}"
+
+  LOGIN_REQUIRED: true
+
+  #  REMOTE_AUTH_ENABLED: "{{ netbox_oidc_enable }}"
+  #  REMOTE_AUTH_BACKEND: "social_core.backends.oidc.OpenIdConnectAuth"
+  #  REMOTE_AUTH_AUTO_CREATE_GROUPS: true
+  #  REMOTE_AUTH_AUTO_CREATE_USER: true
+  #  REMOTE_AUTH_GROUP_SYNC_ENABLED: true
+  #  REMOTE_AUTH_SUPERUSER_GROUPS:
+  #    - "{{ netbox_oidc_admin_group }}"
+  #  REMOTE_AUTH_STAFF_GROUPS:
+  #    - "{{ netbox_oidc_staff_group }}"
+
+  #  SOCIAL_AUTH_OIDC_OIDC_ENDPOINT: "{{ netbox_oidc_endpoint}}"
+  #  SOCIAL_AUTH_OIDC_KEY: "{{ netbox_oidc_key}}"
+  #  SOCIAL_AUTH_OIDC_SECRET: "{{ netbox_oidc_secret}}"
+  #  SOCIAL_AUTH_OIDC_SCOPE: [ groups ]
+
+  PROTECTION_RULES: "{{ netbox_protection_rules }}"
+
+  POWERFEED_DEFAULT_VOLTAGE: 230
+
+  CENSUS_REPORTING_ENABLED: false
+  CHANGELOG_RETENTION: 500
+
+  CHANGELOG_SKIP_EMPTY_CHANGES: true
+
+  METRICS_ENABLED: "{{ netbox_metrics_enabled | default(true) }}"
+
+  PLUGINS: "{{ netbox_plugins }}"

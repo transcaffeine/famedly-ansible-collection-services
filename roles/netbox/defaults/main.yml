@@ -1,0 +1,136 @@
+---
+netbox_path_base: /opt/netbox
+
+netbox_version: "3.7.5"
+
+netbox_user_name: netbox
+
+netbox_fqdn: "https://{{ netbox_domain }}"
+netbox_allowed_hosts:
+  - "{{ netbox_domain }}"
+
+netbox_login_required: true
+
+# Extra Plugins to install
+netbox_plugins:
+  - 'netbox_topology_views'
+  - 'netbox_inventory'
+  - 'netbox_bgp'
+
+# Quality of Life
+netbox_protection_rules:
+  "dcim.site":
+    - "status":
+        - "eq": "decommisioning"
+
+netbox_path_yaml_config: "{{ netbox_path_base }}/config"
+netbox_path_state: "{{ netbox_path_base }}/state"
+netbox_path_static: "{{ netbox_path_base }}/netbox/static"
+netbox_path_socks: "{{ netbox_path_base }}/socks"
+netbox_path_socks_uwsgi: "{{ netbox_path_socks }}/uwsgi.sock"
+netbox_path_nginx_config: "{{ netbox_path_base }}/nginx.conf"
+netbox_path_uwsgi_config: "{{ netbox_path_base }}/uwsgi.ini"
+netbox_file_config_py: "{{ netbox_path_base }}/netbox/netbox/configuration.py"
+
+netbox_container_port: 8000
+
+netbox_container_name: "netbox"
+netbox_container_env: {}
+netbox_container_ports: []
+netbox_container_labels_merged: >-
+  {{ netbox_container_labels_base |
+  combine(netbox_container_labels | default({})) }}
+netbox_container_labels_base:
+  version: "{{ netbox_version }}"
+netbox_container_volumes_common:
+  - "{{ netbox_path_base ~ '/configuration.py' ~ ':' ~ netbox_file_config_py }}"
+  - "{{ netbox_path_yaml_config ~ ':' ~ netbox_path_yaml_config }}"
+  - "{{ netbox_path_state ~ ':' ~ netbox_path_state }}"
+  - "{{ netbox_postgres_socket ~ ':' ~ netbox_postgres_socket }}"
+  - "{{ netbox_path_static ~ ':' ~ netbox_path_static }}"
+  - "{{ netbox_path_socks ~ ':' ~ netbox_path_socks }}"
+  - "{{ netbox_path_uwsgi_config ~ ':' ~ netbox_path_uwsgi_config }}"
+  - "/etc/passwd:/etc/passwd:ro"
+
+netbox_container_volumes_nginx:
+  - "{{ netbox_path_nginx_config }}:/etc/nginx/conf.d/netbox.conf"
+  - "{{ netbox_path_state ~ ':' ~ netbox_path_state }}"
+  - "{{ netbox_path_static ~ ':' ~ netbox_path_static }}"
+  - "{{ netbox_path_socks ~ ':' ~ netbox_path_socks }}"
+
+netbox_container_restart_policy: "always"
+netbox_container_image_state: "present"
+netbox_container_image_force_pull: true
+netbox_container_image_reference: >-
+  {{
+    netbox_container_image_repository
+    ~ ":"
+    ~ netbox_container_image_tag | default('v' ~ netbox_version )
+  }}
+netbox_container_image_repository: >-
+  {{
+    (
+      container_registries[netbox_container_image_registry]
+      | default(netbox_container_image_registry)
+    )
+    ~ '/'
+    ~ netbox_container_image_namespace | default('')
+    ~ netbox_container_image_name
+  }}
+
+netbox_container_nginx_image_reference: >-
+  {{
+    netbox_container_nginx_image_repository
+    ~ ":"
+    ~ netbox_container_nginx_image_tag | default('bookworm')
+  }}
+netbox_container_nginx_image_repository: >-
+  {{
+    (
+      container_registries[netbox_container_nginx_image_registry]
+      | default(netbox_container_nginx_image_registry)
+    )
+    ~ '/'
+    ~ netbox_container_nginx_image_namespace | default('')
+    ~ netbox_container_nginx_image_name
+  }}
+
+netbox_container_image_registry: "docker-oss.nexus.famedly.de"
+netbox_container_image_name: "netbox"
+
+netbox_container_nginx_image_registry: "docker.io"
+netbox_container_nginx_image_name: "nginx"
+
+netbox_postgres_name: "netbox"
+netbox_postgres_user: "netbox"
+# netbox_postgres_password: ~
+netbox_postgres_host: "{{ netbox_postgres_socket }}"
+
+netbox_redis_host: ~
+netbox_redis_port: 6379
+netbox_redis_username: "netbox"
+# netbox_redis_password: ~
+netbox_redis_tasks_db: 0
+netbox_redis_cache_db: 1
+netbox_redis_ssl: false
+
+# netbox_secret_key: ~
+
+netbox_allow_token_retrival: false
+netbox_secure_cookies: true
+
+# netbox_oidc_enable: false
+# netbox_oidc_admin_group: ~
+# netbox_oidc_staff_group: ~
+# netbox_oidc_endpoint: ~
+# netbox_oidc_key: ~
+# netbox_oidc_secret: ~
+
+netbox_metrics_enabled: true
+
+netbox_nginx_listen: 8000
+
+netbox_container_commands:
+  - { name: "uwsgi", entry: "/opt/netbox/venv/bin/uwsgi {{ netbox_path_uwsgi_config }}" }
+  - { name: "workers", entry: "/opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py rqworker high default low" }
+  - { name: "housekeeping", entry: "/opt/netbox/housekeeping.sh" }

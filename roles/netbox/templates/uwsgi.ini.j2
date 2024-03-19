@@ -1,0 +1,5 @@
+[uwsgi]
+chmod-socket = 777
+socket = {{ netbox_path_socks_uwsgi }}
+chdir = /opt/netbox/netbox
+wsgi-file = /opt/netbox/netbox/netbox/wsgi.py

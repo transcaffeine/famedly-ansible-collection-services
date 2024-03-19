@@ -1,0 +1,28 @@
+---
+- name: Restart uwsgi
+  community.docker.docker_container:
+    name: "{{ netbox_container_name }}_uwsgi"
+    state: "started"
+    restart: true
+  listen: "restart-netbox-web"
+
+- name: Restart redis queue and task workers
+  community.docker.docker_container:
+    name: "{{ netbox_container_name }}_workers"
+    state: "started"
+    restart: true
+  listen: "restart-netbox-web"
+
+- name: Restart nginx
+  community.docker.docker_container:
+    name: "{{ netbox_container_name }}_nginx"
+    state: "started"
+    restart: true
+  listen: "restart-netbox-nginx"
+
+- name: Restart housekeeping ( and migrate database )
+  community.docker.docker_container:
+    name: "{{ netbox_container_name }}_housekeeping"
+    state: "started"
+    restart: true
+  listen: "migrate-netbox"

@@ -1,0 +1,34 @@
+---
+- hosts: [netbox]
+  become: true
+  strategy: free
+  roles:
+    - role: famedly.base.postgresql_client_access
+      vars:
+        postgresql_client_access_users: "{{ netbox_postgresql_users }}"
+        postgresql_client_access_databases: "{{ netbox_postgresql_databases }}"
+        postgresql_client_access_hba_entries: "{{ netbox_postgresql_hba_entries }}"
+    - role: famedly.base.redis
+      become: true
+      vars:
+        redis_prefix: "netbox_"
+        redis_user: "{{ netbox_redis_username }}"
+        redis_secret: "{{ netbox_redis_password }}"
+        redis_docker_ports:
+          - "{{ famedly_docker_gateway_ip }}:6379:6379"
+    - role: famedly.services.netbox
+
+  vars:
+    routing_service_name: netbox
+    routing_server_port: "{{ netbox_container_port }}"
+    routing_traffic_public_rule: >-
+      HostRegexp(`{{ netbox_domain }}`, `{subdomain:.+}.{{ netbox_domain }}`)
+      && !Path(`/debug/metrics`)
+    routing_traffic_metrics_rule: Path(`/{{ routing_service_name }}/metrics`)
+    routing_traffic_metrics_middlewares:
+      - replacepath
+    famedly_traefik_middlewares:
+      replacepath:
+        replacepath:
+          path: "/debug/metrics"
+    netbox_container_labels: "{{ famedly_traefik_labels_flat }}"

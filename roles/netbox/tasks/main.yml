@@ -1,0 +1,114 @@
+---
+- name: Add the user "{{ netbox_user_name }}"
+  ansible.builtin.user:
+    name: "{{ netbox_user_name }}"
+    groups: "{{ netbox_user_name }}"
+    create_home: false
+  register: netbox_user
+  become: true
+
+- name: "Create directories for netbox"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ netbox_user.name }}"
+    group: "{{ netbox_user.group }}"
+  become: true
+  loop:
+    - "{{ netbox_path_base }}"
+    - "{{ netbox_path_yaml_config }}"
+    - "{{ netbox_path_state }}"
+
+- name: "Write netbox config loader"
+  ansible.builtin.copy:
+    src: "loader.py"
+    dest: "{{ netbox_path_base }}/configuration.py"
+    mode: "0775"
+
+- name: "Write netbox nginx config"
+  ansible.builtin.template:
+    src: "nginx.conf.j2"
+    dest: "{{ netbox_path_nginx_config }}"
+    mode: "0775"
+  notify: ["restart-netbox-nginx"]
+
+- name: "Write netbox uwsgi config"
+  ansible.builtin.template:
+    src: "uwsgi.ini.j2"
+    dest: "{{ netbox_path_uwsgi_config }}"
+    mode: "0775"
+  notify: ["restart-netbox-web"]
+
+- name: "Write netbox config"
+  ansible.builtin.copy:
+    content: "{{ item.content | ansible.builtin.to_nice_yaml }}"
+    dest: "{{ netbox_path_yaml_config ~ '/' ~ item.dest }}"
+    mode: "0666"
+  loop:
+    - { content: "{{ netbox_flat_config }}", dest: "flat.yaml" }
+  notify: ["restart-netbox-web"]
+
+- name: Ensure container image is present locally
+  community.docker.docker_image:
+    name: "{{ netbox_container_image_reference }}"
+    source: "pull"
+    state: "{{ netbox_container_image_state }}"
+    force_source: "{{ netbox_container_image_force_pull }}"
+  register: netbox_container_image_pulled
+  until: netbox_container_image_pulled is success
+  retries: 10
+  delay: 5
+  become: true
+  tags: ["deploy", "deploy-netbox"]
+  notify:
+    - "migrate-netbox"
+    - "restart-netbox-web"
+    - "restart-netbox-nginx"
+
+- name: Ensure container image nginx is present locally
+  community.docker.docker_image:
+    name: "{{ netbox_container_nginx_image_reference }}"
+    source: "pull"
+    state: "{{ netbox_container_image_state }}"
+    force_source: "{{ netbox_container_image_force_pull }}"
+  register: netbox_container_image_pulled
+  until: netbox_container_image_pulled is success
+  retries: 10
+  delay: 5
+  become: true
+  tags: ["deploy", "deploy-netbox"]
+
+- name: Ensure container is started
+  community.docker.docker_container:
+    image: "{{ netbox_container_image_reference }}"
+    name: "{{ netbox_container_name ~ '_' ~ item.name }}"
+    state: "started"
+    restart_policy: "{{ netbox_container_restart_policy | default(omit) }}"
+    user: "{{ netbox_user.uid ~ ':' ~ netbox_user.group }}"
+    volumes: "{{ netbox_container_volumes_common }}"
+    ports: "{{ netbox_container_ports }}"
+    env: "{{ netbox_container_env | default(omit) }}"
+    command: "{{ item.entry }}"
+    etc_hosts: "{{ netbox_container_etc_hosts | default(omit) }}"
+    networks: "{{ netbox_container_networks | default(omit) }}"
+    purge_networks: "{{ netbox_container_purge_networks | default(omit) }}"
+  become: true
+  tags: ["deploy", "deploy-netbox"]
+  loop: "{{ netbox_container_commands }}"
+
+- name: Ensure container nginx is started
+  community.docker.docker_container:
+    image: "{{ netbox_container_nginx_image_reference }}"
+    name: "{{ netbox_container_name }}_nginx"
+    state: "started"
+    restart_policy: "{{ netbox_container_restart_policy | default(omit) }}"
+    volumes: "{{ netbox_container_volumes_nginx }}"
+    ports: "{{ netbox_container_ports }}"
+    env: "{{ netbox_container_env | default(omit) }}"
+    labels: "{{ netbox_container_labels_merged }}"
+    etc_hosts: "{{ netbox_container_etc_hosts | default(omit) }}"
+    networks: "{{ netbox_container_networks | default(omit) }}"
+    purge_networks: "{{ netbox_container_purge_networks | default(omit) }}"
+  become: true
+  tags: ["deploy", "deploy-netbox"]

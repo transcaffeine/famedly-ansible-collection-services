@@ -1,0 +1,13 @@
+server {
+	listen {{ netbox_nginx_listen }};
+	server_name _;
+
+	location /static/ {
+	    alias {{ netbox_path_static }}/;
+	}
+
+	location / {
+	    include		uwsgi_params;
+	    uwsgi_pass	unix://{{ netbox_path_socks_uwsgi }};
+	}
+}
