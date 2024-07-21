@@ -1,5 +1,5 @@
 ---
-vaultwarden_container_labels_merged: "{{ vaultwarden_container_labels_base | combine(vaultwarden_container_labels, recursive=True) }}"
+vaultwarden_container_labels_merged: "{{ vaultwarden_container_labels_base | combine(vaultwarden_container_labels | default({}), recursive=True) }}"
 vaultwarden_container_labels_base:
   version: "{{ vaultwarden_version }}"
 
